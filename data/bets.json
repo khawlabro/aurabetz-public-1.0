@@ -1,0 +1,273 @@
+{
+  "bets": [
+    {
+      "id": 1,
+      "sport": "UFC",
+      "event": "Islam Makhachev vs Dustin Poirier",
+      "time": "2024-06-01T23:00:00Z",
+      "mainBet": {
+        "type": "Moneyline",
+        "pick": "Islam Makhachev",
+        "odds": -250,
+        "probability": 0.78,
+        "value": 0.28,
+        "confidence": "High"
+      },
+      "otherBets": [
+        {
+          "type": "Method of Victory",
+          "pick": "Makhachev by Submission",
+          "odds": 150,
+          "value": 0.18
+        },
+        {
+          "type": "Round Total",
+          "pick": "Under 4.5 Rounds",
+          "odds": -120,
+          "value": 0.15
+        }
+      ],
+      "analysis": "Makhachev's grappling advantage should be decisive against Poirier. While Dustin has improved his takedown defense, Islam's chain wrestling and top control will likely wear him down.",
+      "aiReasoning": "Our model shows a 78% win probability for Makhachev based on 35 similar matchup comparisons. The value is strong at 28% above implied probability. Submission is the most likely finish method (42% probability).",
+      "sportsbooks": [
+        {
+          "name": "DraftKings",
+          "odds": -250
+        },
+        {
+          "name": "FanDuel",
+          "odds": -240
+        },
+        {
+          "name": "BetMGM",
+          "odds": -260
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "sport": "NBA",
+      "event": "Boston Celtics vs Dallas Mavericks",
+      "time": "2024-06-06T02:30:00Z",
+      "mainBet": {
+        "type": "Point Spread",
+        "pick": "Celtics -6.5",
+        "odds": -110,
+        "probability": 0.62,
+        "value": 0.17,
+        "confidence": "Medium"
+      },
+      "otherBets": [
+        {
+          "type": "Player Prop",
+          "pick": "Jayson Tatum Over 28.5 Points",
+          "odds": -115,
+          "value": 0.12
+        }
+      ],
+      "analysis": "Boston's home court advantage and superior defense should cover this spread. Dallas struggles against teams with strong wing defenders like the Celtics.",
+      "aiReasoning": "Statistical model gives Celtics a 68% chance to cover based on last 20 home games vs Western Conference opponents. Tatum averages 30.2 ppg in similar matchups.",
+      "sportsbooks": [
+        {
+          "name": "DraftKings",
+          "odds": -110
+        },
+        {
+          "name": "FanDuel",
+          "odds": -105
+        },
+        {
+          "name": "BetMGM",
+          "odds": -115
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "sport": "UFC",
+      "event": "Florida Panthers vs Edmenton Oilers",
+      "time": "",
+      "mainBet": {
+        "type": "Moneyline",
+        "pick": "Florida Panthers",
+        "odds": null,
+        "probability": null,
+        "value": null,
+        "confidence": "High"
+      },
+      "otherBets": [],
+      "analysis": "",
+      "aiReasoning": "",
+      "sportsbooks": [
+        {
+          "name": "DraftKings",
+          "odds": null
+        },
+        {
+          "name": "FanDuel",
+          "odds": null
+        },
+        {
+          "name": "BetMGM",
+          "odds": null
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "sport": "Soccer",
+      "event": "Milan vs Barcelona",
+      "time": "",
+      "mainBet": {
+        "type": "Moneyline",
+        "pick": "Barcelona",
+        "odds": -350,
+        "probability": 0.5,
+        "value": 0.5,
+        "confidence": "High"
+      },
+      "otherBets": [],
+      "analysis": "",
+      "aiReasoning": "",
+      "sportsbooks": [
+        {
+          "name": "DraftKings",
+          "odds": -350
+        },
+        {
+          "name": "FanDuel",
+          "odds": -345
+        },
+        {
+          "name": "BetMGM",
+          "odds": -355
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "sport": "UFC",
+      "event": "Big Mike vs Osamba",
+      "time": "",
+      "mainBet": {
+        "type": "",
+        "pick": "",
+        "odds": null,
+        "probability": null,
+        "value": null,
+        "confidence": "High"
+      },
+      "otherBets": [],
+      "analysis": "",
+      "aiReasoning": "",
+      "sportsbooks": [
+        {
+          "name": "DraftKings",
+          "odds": null
+        },
+        {
+          "name": "FanDuel",
+          "odds": null
+        },
+        {
+          "name": "BetMGM",
+          "odds": null
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "sport": "UFC",
+      "event": "bitch",
+      "time": "",
+      "mainBet": {
+        "type": "",
+        "pick": "",
+        "odds": null,
+        "probability": null,
+        "value": null,
+        "confidence": "High"
+      },
+      "otherBets": [],
+      "analysis": "",
+      "aiReasoning": "",
+      "sportsbooks": [
+        {
+          "name": "DraftKings",
+          "odds": null
+        },
+        {
+          "name": "FanDuel",
+          "odds": null
+        },
+        {
+          "name": "BetMGM",
+          "odds": null
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "sport": "UFC",
+      "event": "Mucho vs Bandeto",
+      "time": "",
+      "mainBet": {
+        "type": "Futurama",
+        "pick": "Ballz",
+        "odds": null,
+        "probability": null,
+        "value": null,
+        "confidence": "High"
+      },
+      "otherBets": [],
+      "analysis": "",
+      "aiReasoning": "",
+      "sportsbooks": [
+        {
+          "name": "DraftKings",
+          "odds": null
+        },
+        {
+          "name": "FanDuel",
+          "odds": null
+        },
+        {
+          "name": "BetMGM",
+          "odds": null
+        }
+      ]
+    }
+  ],
+  "gameData": {
+    "currentDay": 2,
+    "completedDays": 1,
+    "startingAmount": 10,
+    "currentAmount": 25,
+    "bets": [
+      {
+        "day": 1,
+        "sport": "UFC",
+        "event": "Islam Makhachev vs Dustin Poirier",
+        "bet": "Islam Makhachev",
+        "betType": "Moneyline",
+        "odds": -250,
+        "amount": 10,
+        "potentialProfit": 4,
+        "completed": true,
+        "won": true
+      },
+      {
+        "day": 2,
+        "sport": "NBA",
+        "event": "Boston Celtics vs Dallas Mavericks",
+        "bet": "Celtics -6.5",
+        "betType": "Point Spread",
+        "odds": -110,
+        "amount": 25,
+        "potentialProfit": 22.73,
+        "completed": false,
+        "won": null
+      }
+    ]
+  }
+}

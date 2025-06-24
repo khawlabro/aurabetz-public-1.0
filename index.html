@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetSmart - Daily Sports Betting Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #loadingSpinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .spinner-content {
+            text-align: center;
+        }
+        .spinner-icon {
+            color: var(--primary);
+            font-size: 3rem;
+            animation: fa-spin 2s infinite linear;
+        }
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(359deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner">
+        <div class="spinner-content">
+            <i class="fas fa-circle-notch spinner-icon"></i>
+            <p style="margin-top:20px">Loading BetSmart...</p>
+        </div>
+    </div>
+
+    <!-- Authentication Wall -->
+<div id="authWall" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1001; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 2rem; border-radius: 8px; text-align: center; max-width: 400px;">
+        <h2>Enter PIN to Access BetSmart</h2>
+        <input type="password" id="pinInput" placeholder="Enter PIN" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
+        <button id="submitPin" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Access App</button>
+        <div id="pinError" style="display: none; color: red; margin-top: 10px;"></div>
+    </div>
+</div>
+    
+    <!-- Main App Content -->
+    <div id="appContent" style="display:none">
+        <div class="container">
+            <!-- Header -->
+            <header class="header">
+                <div class="flex justify-between items-center">
+                    <h1>BetSmart</h1>
+                    <div class="flex items-center gap-3">
+                        <button id="theGameBtn" class="btn btn-primary gap-2">
+                            <i class="fas fa-gem"></i>
+                            <span>The Game</span>
+                        </button>
+                        <button id="subscribeBtn" class="btn btn-primary gap-2">
+                            <i class="fas fa-envelope"></i>
+                            <span>Subscribe</span>
+                        </button>
+                        <button id="darkModeToggle" class="btn-icon dark-mode-toggle">
+                            <i class="fas fa-moon"></i>
+                            <i class="fas fa-sun hidden"></i>
+                        </button>
+                    </div>
+                </div>
+                <p>Find today's best betting opportunities</p>
+            </header>
+
+            <!-- Sports Filter Tabs -->
+            <div class="tabs" id="sportTabs">
+                <button class="tab tab-active" data-sport="All Sports">All Sports</button>
+                <button class="tab tab-inactive" data-sport="UFC">UFC</button>
+                <button class="tab tab-inactive" data-sport="NHL">NHL</button>
+                <button class="tab tab-inactive" data-sport="NBA">NBA</button>
+                <button class="tab tab-inactive" data-sport="Soccer">Soccer</button>
+                <button class="tab tab-inactive" data-sport="Table Tennis">Table Tennis</button>
+            </div>
+
+            <!-- Filters and Sorting -->
+            <div class="filters">
+                <div class="flex items-center gap-2">
+                    <span>Sort by:</span>
+                    <select id="sortOptions">
+                        <option value="value">Best Value</option>
+                        <option value="odds">Best Odds</option>
+                        <option value="confidence">Highest Confidence</option>
+                        <option value="time">Start Time</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="highValueOnly">
+                        <span>Show Only High Value</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Bets Grid -->
+            <div id="betsContainer" class="bets-grid">
+                <!-- Sample UFC Bet Card -->
+                <div class="bet-card">
+                    <div class="bet-header">
+                        <span class="bet-sport">UFC</span>
+                        <span class="bet-time">Jun 1, 7:00 PM</span>
+                    </div>
+                    <h3 class="bet-title">Islam Makhachev vs Dustin Poirier</h3>
+                    <div class="bet-type-row">
+                        <span class="bet-type">Moneyline</span>
+                        <span class="bet-value value-high">Value: 28%</span>
+                    </div>
+                    <div class="bet-selection-row">
+                        <div class="bet-pick-container">
+                            <span class="bet-pick">Islam Makhachev</span>
+                            <span class="confidence-badge confidence-high">High Confidence</span>
+                        </div>
+                        <span class="bet-odds">-250</span>
+                    </div>
+                    <div class="bet-footer">
+                        <span class="best-odds">Best Odds: -240</span>
+                        <button class="view-analysis-btn">View Analysis</button>
+                    </div>
+                </div>
+
+                <!-- Sample UFC Bet Card 2 -->
+                <div class="bet-card">
+                    <div class="bet-header">
+                        <span class="bet-sport">UFC</span>
+                        <span class="bet-time">Jun 14, 7:45 PM</span>
+                    </div>
+                    <h3 class="bet-title">Ange Loosa vs Philip Rowe</h3>
+                    <div class="bet-type-row">
+                        <span class="bet-type">Moneyline</span>
+                        <span class="bet-value value-high">Value: 15%</span>
+                    </div>
+                    <div class="bet-selection-row">
+                        <div class="bet-pick-container">
+                            <span class="bet-pick">Ange Loosa</span>
+                            <span class="confidence-badge confidence-high">High Confidence</span>
+                        </div>
+                        <span class="bet-odds">-162</span>
+                    </div>
+                    <div class="bet-footer">
+                        <span class="best-odds">Best Odds: -160</span>
+                        <button class="view-analysis-btn">View Analysis</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Detailed View -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle" class="modal-title"></h2>
+                    <button id="closeModal" class="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="modalContent" class="modal-body"></div>
+            </div>
+        </div>
+
+        <!-- The Game Modal -->
+        <div id="gameModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title flex items-center gap-2">
+                        <i class="fas fa-gem text-primary"></i>
+                        The Game: 9-Day Challenge
+                    </h2>
+                    <button id="closeGameModal" class="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="grid">
+                        <!-- Left Side: The Progress Tree -->
+                        <div>
+                            <div class="progress-tree-container">
+                                <h3>Your Progress Tree</h3>
+                                <div class="diamond-tree">
+                                    <!-- Diamond 9 (top) -->
+                                    <div class="diamond-container">
+                                        <div class="diamond diamond-9" data-day="9">
+                                            <span>9</span>
+                                        </div>
+                                        <div class="diamond-label">Day 9: $500+</div>
+                                    </div>
+                                    
+                                    <!-- Diamond 8 & 7 -->
+                                    <div class="diamond-row">
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-8" data-day="8">
+                                                <span>8</span>
+                                            </div>
+                                            <div class="diamond-label">Day 8: $350</div>
+                                        </div>
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-7" data-day="7">
+                                                <span>7</span>
+                                            </div>
+                                            <div class="diamond-label">Day 7: $225</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Diamond 6 & 5 -->
+                                    <div class="diamond-row">
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-6" data-day="6">
+                                                <span>6</span>
+                                            </div>
+                                            <div class="diamond-label">Day 6: $150</div>
+                                        </div>
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-5" data-day="5">
+                                                <span>5</span>
+                                            </div>
+                                            <div class="diamond-label">Day 5: $100</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Diamond 4 & 3 -->
+                                    <div class="diamond-row">
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-4" data-day="4">
+                                                <span>4</span>
+                                            </div>
+                                            <div class="diamond-label">Day 4: $65</div>
+                                        </div>
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-3" data-day="3">
+                                                <span>3</span>
+                                            </div>
+                                            <div class="diamond-label">Day 3: $40</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Diamond 2 & 1 (bottom) -->
+                                    <div class="diamond-row">
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-2" data-day="2">
+                                                <span>2</span>
+                                            </div>
+                                            <div class="diamond-label">Day 2: $25</div>
+                                        </div>
+                                        <div class="diamond-container">
+                                            <div class="diamond diamond-1" data-day="1">
+                                                <span>1</span>
+                                            </div>
+                                            <div class="diamond-label">Day 1: $10</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Side: Game Info and Today's Bet -->
+                        <div>
+                            <div class="game-info-section">
+                                <h3>How It Works</h3>
+                                <div class="info-box">
+                                    <ul>
+                                        <li><span class="info-label">1 Game Per Day:</span> Bet ONLY on our single daily recommended game.</li>
+                                        <li><span class="info-label">Compound Your Winnings:</span> Start with $10 and reinvest all winnings each day.</li>
+                                        <li><span class="info-label">Track Your Progress:</span> Each win lights up a diamond on your tree.</li>
+                                        <li><span class="info-label">Potential 5-10X Return:</span> Following the system can multiply your initial $10 by 5-10X or more.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="todays-pick-section">
+                                <h3>Today's Pick (Day 2)</h3>
+                                <div class="bet-card">
+                                    <div class="bet-header">
+                                        <span class="bet-sport">NHL</span>
+                                        <span class="bet-time">Nov 11, 7:00 PM</span>
+                                    </div>
+                                    <h3 class="bet-title">Toronto Maple Leafs vs Montreal Canadiens</h3>
+                                    <div class="bet-type-row">
+                                        <span class="bet-type">Puck Line</span>
+                                        <span class="bet-value value-high">Value: 30%</span>
+                                    </div>
+                                    <div class="bet-selection-row">
+                                        <div class="bet-pick-container">
+                                            <span class="bet-pick">Maple Leafs -1.5</span>
+                                            <span class="confidence-badge confidence-high">High Confidence</span>
+                                        </div>
+                                        <span class="bet-odds">+145</span>
+                                    </div>
+                                    <div class="bet-footer">
+                                        <span class="best-odds">Best Odds: +140</span>
+                                        <button class="view-analysis-btn">View Analysis</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-section">
+                                <h3>Your Progress</h3>
+                                <div class="progress-box">
+                                    <div class="progress-item">
+                                        <span>Starting Amount:</span>
+                                        <span class="value">$10.00</span>
+                                    </div>
+                                    <div class="progress-item">
+                                        <span>Current Amount:</span>
+                                        <span class="value">$25.00</span>
+                                    </div>
+                                    <div class="progress-item">
+                                        <span>Days Completed:</span>
+                                        <span class="value">1 of 9</span>
+                                    </div>
+                                    <div class="progress-item">
+                                        <span>Projected Final Amount:</span>
+                                        <span class="final-amount">$500+</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Signup Modal -->
+        <div id="emailSignupModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">BetSmart</h2>
+                    <p>AI-Powered Sports Betting Analysis</p>
+                </div>
+                <div class="modal-body">
+                    <h3>Get Access To:</h3>
+                    <ul class="features-list">
+                        <li>AI-analyzed daily picks with 70%+ win rate</li>
+                        <li>Real-time odds comparison across sportsbooks</li>
+                        <li>The Game: Turn $10 into $500+ challenge</li>
+                        <li>Expert analysis for UFC, NBA, NHL & more</li>
+                    </ul>
+
+                    <div class="divider"></div>
+
+                    <h3>Enter your email address</h3>
+                    <input type="email" id="emailInput" class="form-control" placeholder="you@example.com" required>
+                    <button id="submitEmailBtn" class="btn btn-primary">Get Free Access</button>
+
+                    <p class="privacy-note">
+                        <strong>Your email is secure.</strong> No spam, unsubscribe anytime.
+                    </p>
+
+                    <div class="stats">
+                        <span>25,000+ users</span>
+                        <span>4.9/5 rating</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscribe Modal -->
+        <div id="subscribeModal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2 class="modal-title">Subscribe to BetSmart Pro</h2>
+                    <button id="closeSubscribeModal" class="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <div class="payment-header">
+                                <i class="fas fa-envelope-open-text payment-icon"></i>
+                                <h3>Cash By Mail</h3>
+                            </div>
+                            <div class="payment-details">
+                                <p>For US & Canada residents</p>
+                                <ul>
+                                    <li>Send cash to our mailing address</li>
+                                    <li>Include your email address</li>
+                                    <li>We'll email your login within 3 business days</li>
+                                </ul>
+                            </div>
+                            <button class="payment-select-btn">Select</button>
+                        </div>
+                        
+                        <div class="payment-option">
+                            <div class="payment-header">
+                                <i class="fas fa-money-bill-transfer payment-icon"></i>
+                                <h3>Interac E-Transfer</h3>
+                            </div>
+                            <div class="payment-details">
+                                <p>For Canadian residents only</p>
+                                <ul>
+                                    <li>Send to payments@betsmart.com</li>
+                                    <li>Use password "betsmart"</li>
+                                    <li>Instant activation</li>
+                                </ul>
+                            </div>
+                            <button class="payment-select-btn">Select</button>
+                        </div>
+                        
+                        <div class="payment-option">
+                            <div class="payment-header">
+                                <i class="fas fa-mobile-alt payment-icon"></i>
+                                <h3>Chime/CashApp</h3>
+                            </div>
+                            <div class="payment-details">
+                                <p>For US residents only</p>
+                                <ul>
+                                    <li>Send to $BetSmartPay</li>
+                                    <li>Include your email in notes</li>
+                                    <li>Instant activation</li>
+                                </ul>
+                            </div>
+                            <button class="payment-select-btn">Select</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase + App Initialization -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+      // Firebase Config
+      const firebaseConfig = {
+        apiKey: "AIzaSyCzXxF1HkUYB6EJq5jAVz8X3pM4NkPg8iA",
+        authDomain: "aurabetz.firebaseapp.com",
+        projectId: "aurabetz",
+        storageBucket: "aurabetz.firebasestorage.app",
+        messagingSenderId: "531651661385",
+        appId: "1:531651661385:web:d82a50a33bb77297b7f998",
+        measurementId: "G-7L19JWBH21"
+      };
+      
+      // Initialize Firebase
+      try {
+        firebase.initializeApp(firebaseConfig);
+        
+        // Check if initialization was successful
+        if (firebase.apps.length > 0) {
+          firebase.auth().onAuthStateChanged(() => {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('appContent').style.display = 'block';
+          });
+        } else {
+          throw new Error("Firebase initialization failed");
+        }
+      } catch (e) {
+        console.error("Firebase error:", e);
+        document.getElementById('loadingSpinner').innerHTML = `
+          <div class="spinner-content">
+            <p style="color: red;">Error loading application. Please refresh the page.</p>
+            <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">
+              Refresh Page
+            </button>
+          </div>`;
+      }
+    </script>
+    
+    <script src="app.js"></script>
+</body>
+</html>
