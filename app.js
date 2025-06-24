@@ -19,14 +19,17 @@ class BetSmartApp {
         };
         
         try {
-            // Initialize Firebase only if not already initialized
-            if (!firebase.apps.length) {
-                this.app = firebase.initializeApp(this.firebaseConfig);
-            } else {
-                this.app = firebase.app();
-            }
-            this.auth = firebase.auth();
-            this.db = firebase.firestore();
+    if (!firebase.apps.length) {
+        this.app = firebase.initializeApp(this.firebaseConfig);
+    } else {
+        this.app = firebase.app();
+    }
+    
+    // Initialize auth with persistence
+    this.auth = firebase.auth();
+    this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    
+    this.db = firebase.firestore();
             
             // Check for existing auth
             const savedPin = localStorage.getItem('betSmartAuth');
