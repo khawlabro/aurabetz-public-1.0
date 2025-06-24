@@ -43,14 +43,14 @@
     </div>
 
     <!-- Authentication Wall -->
-<div id="authWall" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1001; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 2rem; border-radius: 8px; text-align: center; max-width: 400px;">
-        <h2>Enter PIN to Access BetSmart</h2>
-        <input type="password" id="pinInput" placeholder="Enter PIN" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
-        <button id="submitPin" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Access App</button>
-        <div id="pinError" style="display: none; color: red; margin-top: 10px;"></div>
+    <div id="authWall" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1001; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; text-align: center; max-width: 400px;">
+            <h2>Enter PIN to Access BetSmart</h2>
+            <input type="password" id="pinInput" placeholder="Enter PIN" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
+            <button id="submitPin" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Access App</button>
+            <div id="pinError" style="display: none; color: red; margin-top: 10px;"></div>
+        </div>
     </div>
-</div>
     
     <!-- Main App Content -->
     <div id="appContent" style="display:none">
@@ -430,49 +430,10 @@
         </div>
     </div>
 
-    <!-- Firebase + App Initialization -->
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-<script src="app.js"></script>
-    
-    <script>
-      // Firebase Config
-      const firebaseConfig = {
-        apiKey: "AIzaSyCzXxF1HkUYB6EJq5jAVz8X3pM4NkPg8iA",
-        authDomain: "aurabetz.firebaseapp.com",
-        projectId: "aurabetz",
-        storageBucket: "aurabetz.firebasestorage.app",
-        messagingSenderId: "531651661385",
-        appId: "1:531651661385:web:d82a50a33bb77297b7f998",
-        measurementId: "G-7L19JWBH21"
-      };
-      
-      // Initialize Firebase
-      try {
-        firebase.initializeApp(firebaseConfig);
-        
-        // Check if initialization was successful
-        if (firebase.apps.length > 0) {
-          firebase.auth().onAuthStateChanged(() => {
-            document.getElementById('loadingSpinner').style.display = 'none';
-            document.getElementById('appContent').style.display = 'block';
-          });
-        } else {
-          throw new Error("Firebase initialization failed");
-        }
-      } catch (e) {
-        console.error("Firebase error:", e);
-        document.getElementById('loadingSpinner').innerHTML = `
-          <div class="spinner-content">
-            <p style="color: red;">Error loading application. Please refresh the page.</p>
-            <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">
-              Refresh Page
-            </button>
-          </div>`;
-      }
-    </script>
-    
+   <!-- Firebase + App Initialization - SIMPLIFIED VERSION -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
