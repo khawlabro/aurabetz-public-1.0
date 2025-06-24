@@ -1,4 +1,3 @@
-// BetSmart App - Complete Rewrite for GitHub Pages
 class BetSmartApp {
     constructor() {
         this.bets = [];
@@ -19,8 +18,8 @@ class BetSmartApp {
             measurementId: "G-7L19JWBH21"
         };
         
-        // Initialize Firebase safely
         try {
+            // Initialize Firebase only if not already initialized
             if (!firebase.apps.length) {
                 this.app = firebase.initializeApp(this.firebaseConfig);
             } else {
@@ -28,8 +27,16 @@ class BetSmartApp {
             }
             this.auth = firebase.auth();
             this.db = firebase.firestore();
-            this.initAuth();
+            
+            // Check for existing auth
+            const savedPin = localStorage.getItem('betSmartAuth');
+            if (savedPin) {
+                this.verifyPin(savedPin);
+            } else {
+                this.initAuth();
+            }
         } catch (error) {
+            console.error("Firebase initialization error:", error);
             this.handleAuthError(error);
         }
     }
@@ -41,33 +48,28 @@ class BetSmartApp {
     }
 
     initAuth() {
-        this.auth.onAuthStateChanged((user) => {
-            if (user) {
-                this.initApp();
-            } else {
-                this.showAuthWall();
-            }
-        });
-    }
-
-    showAuthWall() {
         const authWall = document.getElementById('authWall');
-        if (!authWall) return;
+        if (!authWall) {
+            this.handleAuthError(new Error("Auth wall element not found"));
+            return;
+        }
         
         authWall.style.display = 'flex';
         
-        document.getElementById('submitPin').addEventListener('click', () => {
+        document.getElementById('submitPin').onclick = () => {
             const pin = document.getElementById('pinInput').value.trim();
             if (!pin) {
                 this.showPinError("Please enter a PIN");
                 return;
             }
             this.verifyPin(pin);
-        });
+        };
         
-        document.getElementById('pinInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.verifyPin(document.getElementById('pinInput').value.trim());
-        });
+        document.getElementById('pinInput').onkeypress = (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('submitPin').click();
+            }
+        };
     }
 
     verifyPin(pin) {
@@ -77,37 +79,30 @@ class BetSmartApp {
                     throw new Error("Invalid PIN");
                 }
                 localStorage.setItem('betSmartAuth', pin);
-                this.trackAccess(pin);
                 return this.auth.signInAnonymously();
             })
-            .then(() => this.initApp())
+            .then(() => {
+                document.getElementById('authWall').style.display = 'none';
+                this.initApp();
+            })
             .catch((error) => {
                 console.error("PIN verification failed:", error);
                 this.showPinError("Invalid PIN");
+                localStorage.removeItem('betSmartAuth');
             });
     }
 
     showPinError(message) {
         const errorElement = document.getElementById('pinError');
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
-    }
-
-    trackAccess(pin) {
-        if (window.location.hostname === 'localhost') return;
-        
-        const maskedPin = "****" + pin.slice(-2);
-        this.db.collection("accessLogs").add({
-            pin: maskedPin,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            success: true
-        }).catch(console.error);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
     }
 
     initApp() {
         document.getElementById('appContent').style.display = 'none';
         document.getElementById('loadingSpinner').style.display = 'flex';
-        document.getElementById('authWall').style.display = 'none';
         
         this.loadData()
             .then(() => {
@@ -118,7 +113,7 @@ class BetSmartApp {
                 document.getElementById('loadingSpinner').style.display = 'none';
             })
             .catch((error) => {
-                console.error("Initialization failed:", error);
+                console.error("App initialization failed:", error);
                 this.handleAuthError(error);
             });
     }
@@ -126,7 +121,6 @@ class BetSmartApp {
     handleAuthError(error) {
         console.error("Auth error:", error);
         const spinner = document.getElementById('loadingSpinner');
-        
         if (spinner) {
             spinner.innerHTML = `
                 <div class="spinner-content">
