@@ -137,7 +137,7 @@ class BetSmartApp {
     resolveDataUrl() {
         try {
             if (this.isGitHubPages()) {
-                return '/aurabetz-1.0/data/bets.json'; 
+                return '/aurabetz-public-1.0/data/bets.json'; 
             }
             return 'data/bets.json';
         } catch (e) {
