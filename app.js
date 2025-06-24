@@ -73,42 +73,42 @@ class BetSmartApp {
     }
 
     verifyPin(pin) {
-    console.log("Attempting to verify PIN:", pin); // Debug log
+    console.log("Verifying PIN:", pin);
     
-    // Reference to your specific PIN document
-    const pinRef = this.db.collection("validPins").doc("gfmQtH31uKikW1LnV601");
-    
-    pinRef.get()
+    // First verify the PIN
+    this.db.collection("validPins").doc("gfmQtH31uKikW1LnV601").get()
         .then((doc) => {
             if (!doc.exists) {
-                console.error("PIN document does not exist");
+                console.error("PIN document not found");
                 throw new Error("Invalid PIN");
             }
             
             const pinData = doc.data();
-            console.log("Retrieved PIN data:", pinData); // Debug log
-            
-            if (!pinData.pin) {
-                console.error("PIN field missing in document");
+            if (!pinData || pinData.pin !== pin) {
+                console.error("PIN mismatch or missing pin field");
                 throw new Error("Invalid PIN");
             }
             
-            if (pinData.pin.toString() !== pin.toString()) {
-                console.error(`PIN mismatch. Expected: ${pin}, Got: ${pinData.pin}`);
-                throw new Error("Invalid PIN");
-            }
-            
-            console.log("PIN verification successful"); // Debug log
+            // Store PIN in localStorage
             localStorage.setItem('betSmartAuth', pin);
-            return this.auth.signInAnonymously();
+            
+            // Only proceed with anonymous auth if PIN is valid
+            return this.auth.signInAnonymously()
+                .catch(error => {
+                    console.error("Anonymous auth failed:", error);
+                    throw new Error("Authentication error");
+                });
         })
         .then(() => {
+            // Success - hide auth wall and initialize app
             document.getElementById('authWall').style.display = 'none';
             this.initApp();
         })
         .catch((error) => {
-            console.error("PIN verification failed:", error);
-            this.showPinError("Invalid PIN. Please try again.");
+            console.error("Verification failed:", error);
+            this.showPinError(error.message.includes("Invalid PIN") 
+                ? "Invalid PIN" 
+                : "Authentication error. Please try again.");
             localStorage.removeItem('betSmartAuth');
         });
 }
