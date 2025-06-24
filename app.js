@@ -73,24 +73,24 @@ class BetSmartApp {
     }
 
     verifyPin(pin) {
-        this.db.collection("validPins").where("pin", "==", pin).get()
-            .then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    throw new Error("Invalid PIN");
-                }
-                localStorage.setItem('betSmartAuth', pin);
-                return this.auth.signInAnonymously();
-            })
-            .then(() => {
-                document.getElementById('authWall').style.display = 'none';
-                this.initApp();
-            })
-            .catch((error) => {
-                console.error("PIN verification failed:", error);
-                this.showPinError("Invalid PIN");
-                localStorage.removeItem('betSmartAuth');
-            });
-    }
+    this.db.collection("validPins").doc("gfmQtH31uKikW1LnV601").get()
+        .then((doc) => {
+            if (!doc.exists || doc.data().pin !== pin) {
+                throw new Error("Invalid PIN");
+            }
+            localStorage.setItem('betSmartAuth', pin);
+            return this.auth.signInAnonymously();
+        })
+        .then(() => {
+            document.getElementById('authWall').style.display = 'none';
+            this.initApp();
+        })
+        .catch((error) => {
+            console.error("PIN verification failed:", error);
+            this.showPinError("Invalid PIN");
+            localStorage.removeItem('betSmartAuth');
+        });
+}
 
     showPinError(message) {
         const errorElement = document.getElementById('pinError');
